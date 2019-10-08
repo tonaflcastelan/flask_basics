@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session, g
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -12,6 +12,18 @@ app.config.update(
 
 db = SQLAlchemy(app)
 
+
+@app.before_request
+def some_function():
+    g.string = '<br> This code ran before any request'
+
+
+# SESSION OBJECT
+@app.route('/session')
+def session_data():
+    if 'name' not in session:
+        session['name'] = 'harry'
+    return render_template('session.html', session=session, name=session['name'])
 
 # Publication table
 class Publication(db.Model):
